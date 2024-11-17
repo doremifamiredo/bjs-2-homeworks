@@ -80,6 +80,9 @@ describe('Домашнее задание к лекции 5 «Классы»', (
     beforeEach(function(){
       library = new Library('Библиотека имени Ленина');
       printItem = new PrintEditionItem('Типовой школьный журнал', 2019, 102);
+      oldBook = new Book('евреи', 'Библия', -1000, 10000);
+      oldBook.state = 22;
+      oldBook.fix();
     });
 
     it('создание библиотеки', () => {
@@ -90,18 +93,24 @@ describe('Домашнее задание к лекции 5 «Классы»', (
     
     it('добавление книги', () => {
       library.addBook(printItem);
+      library.addBook(oldBook);
+      expect(library.books[1].name).toEqual('Библия');
       expect(library.books[0].name).toEqual('Типовой школьный журнал');
-      expect(library.books.length).toEqual(1);
+      expect(library.books.length).toEqual(2);
     });
     
     it('поиск книги', () => {
       const printItemAdditional = new PrintEditionItem('Блокнот для заметок', 2021, 100);
       library.addBook(printItemAdditional);
       library.addBook(printItem);
+      library.addBook(oldBook);
       const firstBook = library.findBookBy("releaseDate", 2019);
       expect(firstBook.name).toEqual('Типовой школьный журнал');
       const secondBook = library.findBookBy("releaseDate", 2154);
       expect(secondBook).toEqual(null);
+      const thirdBook = library.findBookBy("pagesCount", 10000);
+      expect(thirdBook.name).toEqual('Библия');
+      expect(thirdBook.releaseDate).toEqual(-1000);
     });
     
     it('выдача книги', () => {
